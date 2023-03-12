@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Plot</title>
+  <!-- Include the Plotly.js library -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <!-- Create a div to hold the plot -->
+  <div id="plot"></div>
+
+  <script>
+    // Define the range of annual salary and years
+    var salary_range = Array.from(Array(18).keys()).map(x => (x + 3) * 1200); // Annual salary range from 3600 to 25200
+    var years_range = Array.from(Array(8).keys()).map(x => (x + 3) * 5);
+
+    // Create a meshgrid of annual salary and years
+    var salary = [], years = [];
+    for (var i = 0; i < years_range.length; i++) {
+      var row_salary = [];
+      var row_years = [];
+      for (var j = 0; j < salary_range.length; j++) {
+        row_salary.push(salary_range[j]);
+        row_years.push(years_range[i]);
+      }
+      salary.push(row_salary);
+      years.push(row_years);
+    }
+
+    // Calculate the corresponding function values for each point in the meshgrid
+    var f = salary.map(function (row) {
+      return row.map(function (x, i) {
+        return 0.2 * years[i] * x / 12;
+      })
+    });
+
+    // Define the plot data
+    var data = [{
+      x: salary,
+      y: years,
+      z: f,
+      type: 'surface',
+      colorscale: 'Viridis',
+    }];
+
+    // Define the plot layout
+    var layout = {
+      title: 'F as a Function of Annual Salary and Years of Experience',
+      scene: {
+        xaxis: { title: 'Annual Salary' },
+        yaxis: { title: 'Years of Experience' },
+        zaxis: { title: 'F' }
+      }
+    };
+
+    // Create the plot
+    Plotly.newPlot('plot', data, layout);
+  </script>
+</body>
+</html>
